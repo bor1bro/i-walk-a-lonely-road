@@ -1,0 +1,136 @@
+////////////////////////////////////ÇÀÄÀ×À 5
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Linq;
+using System.Reflection;
+using System.Security.Cryptography.X509Certificates;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace StructSearch
+{
+    public struct Student
+    {
+        public string first_name;
+        public string last_name;
+        public string age;
+    }
+    internal class Program
+    {
+        static void Main(string[] args)
+        {
+            List<Student> StructArray = new List<Student>();
+            int Index_Count = 0;
+
+            Student S1 = new Student                            //Creating structures and saving them into array
+            {
+                first_name = "Toni",
+                last_name = "Bor",
+                age = "19"
+            };
+            StructArray.Add(S1);
+
+            Student S2 = new Student
+            {
+                first_name = "Astrex",
+                last_name = "Exl",
+                age = "16"
+            };
+            StructArray.Add(S2);
+
+            Student S3 = new Student
+            {
+                first_name = "Dani",
+                last_name = "Lakom",
+                age = "19"
+            };
+            StructArray.Add(S3);
+
+            Student S4 = new Student
+            {
+                first_name = "Dani",
+                last_name = "Kuzya",
+                age = "19"
+            };
+            StructArray.Add(S4);
+
+            Student S5 = new Student
+            {
+                first_name = "Dani",
+                last_name = "Lakom",
+                age = "21"
+            };
+            StructArray.Add(S5);
+
+            Console.WriteLine("Input first name of student(press enter to skip): ");    //Filter by first name
+            string Param_FName = Console.ReadLine();
+            for (int Index = 0; Index < StructArray.Count; Index++)
+            {
+                if (StructArray[Index].first_name == Param_FName)
+                {
+                    StructArray[Index_Count] = StructArray[Index];                      
+                    Index_Count++;
+                }               
+            }
+            if (Param_FName != "")
+            {
+                for (int Index = StructArray.Count - 1; Index >= Index_Count; Index--)
+                {
+                    StructArray.RemoveAt(Index);
+                }
+                Index_Count = 0;
+            }
+
+            Console.WriteLine("Input last name of student(press enter to skip): ");     //Filter by last name
+            string Param_LName = Console.ReadLine();
+            for (int Index = 0; Index < StructArray.Count; Index++)
+            {
+                if (StructArray[Index].last_name == Param_LName)
+                {
+                    StructArray[Index_Count] = StructArray[Index];
+                    Index_Count++;
+                }                
+            }
+            if (Param_LName != "")
+            {
+                for (int Index = StructArray.Count - 1; Index >= Index_Count; Index--)
+                {
+                    StructArray.RemoveAt(Index);
+                }
+                Index_Count = 0;
+            }
+
+            Console.WriteLine("Input age of student(press enter to skip): ");           //Filter by age
+            string Param_Age = Console.ReadLine();
+            for (int Index = 0; Index < StructArray.Count; Index++)
+            {
+                if (StructArray[Index].age == Param_Age)
+                {
+                    StructArray[Index_Count] = StructArray[Index];
+                    Index_Count++;
+                }
+            }
+            if (Param_Age != "")
+            {
+                for (int Index = StructArray.Count - 1; Index >= Index_Count; Index--)
+                {
+                    StructArray.RemoveAt(Index);
+                }
+            }
+
+            if (StructArray.Count != 0 && (Param_FName != "" || Param_LName != "" || Param_Age != ""))      //Console output for debugging purposes
+            {
+                Console.WriteLine("Success! This what the algorithm had found: ");
+                for (int Index = 0; Index < StructArray.Count; Index++)
+                {
+                    Console.WriteLine(StructArray[Index].first_name + " " + StructArray[Index].last_name + " " + StructArray[Index].age);
+                }
+            }
+            if (StructArray.Count == 0 || Param_FName == "" && Param_LName == "" && Param_Age == "")
+            {
+                Console.WriteLine("Error! Algorithm couldn't find anything with such parameters");
+            }
+        }
+    }
+}
