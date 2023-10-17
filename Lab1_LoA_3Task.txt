@@ -1,0 +1,25 @@
+////////////////////////////////////ÇÀÄÀ×À 3
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace ArrayFromKB
+{
+    internal class Program
+    {
+        static void Main(string[] args)
+        {
+            int[] Array = new int[int.Parse(Console.ReadLine())];
+            Random Random_Num = new Random();
+            for (int Index = 0; Index < Array.Length; Index++)
+            {
+                int Number = Random_Num.Next(0, 100);
+                Array[Index] = Number;
+                Console.Write(Array[Index] + " ");
+            }
+            Console.WriteLine("\n" + Array.Length);
+        }
+    }
+}
