@@ -1,0 +1,64 @@
+////////////////////////////////////ÇÀÄÀ×À 4
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace SummColonArray
+{
+    internal class Program
+    {
+        static void Main(string[] args)
+        {
+            int[,] Array = new int[5,7];
+            int[] Summ_Array_String = new int[5];
+            int[] Summ_Array_Colon = new int[7];
+            Random Random_Num = new Random();
+            int Summ = 0;
+            for (int F_Index = 0; F_Index < 5; F_Index++)               // Fill array
+            {
+                for (int S_Index = 0; S_Index < 7; S_Index++)
+                {
+                    int Number = Random_Num.Next(0, 100);
+                    Array[F_Index, S_Index] = Number;
+                    Console.Write(Array[F_Index, S_Index] + " ");
+                }
+                Console.WriteLine();
+            }
+
+            for (int F_Index = 0; F_Index < 5; F_Index++)               // Summ of each string of array
+            {
+                for (int S_Index = 0; S_Index < 7; S_Index++)
+                {
+                    Summ += Array[F_Index, S_Index];
+                }
+                Summ_Array_String[F_Index] = Summ;
+            }
+
+            for (int S_Index = 0; S_Index < 7; S_Index++)               // Summ of each colon of array
+            {
+                Summ = 0;
+                for (int F_Index = 0; F_Index < 5; F_Index++)
+                {
+                    Summ += Array[F_Index, S_Index];
+                }
+                Summ_Array_Colon[S_Index] = Summ;
+            }
+
+            Console.WriteLine();
+
+            for (int Index = 0; Index < Summ_Array_String.Length; Index++)      // Displaying arrays for debug
+            { 
+                Console.WriteLine(Summ_Array_String[Index]);
+            }
+
+            Console.WriteLine();
+
+            for (int Index = 0; Index < Summ_Array_Colon.Length; Index++)
+            {
+                Console.WriteLine(Summ_Array_Colon[Index]);
+            }
+        }
+    }
+}
