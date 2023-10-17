@@ -1,0 +1,31 @@
+////////////////////////////////////ЗАДАЧА 1
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace wow
+{
+    internal class Program
+    {
+        static void Main(string[] args)
+        {
+            int[] Array = {10, 0, -10, 33, - 54};
+            int Min_Element = Array[0];
+            int Max_Element = Array[0];
+            for (int Index = 0; Index < Array.Length; Index++)
+            {
+                if (Array[Index] > Max_Element)
+                {
+                    Max_Element = Array[Index];
+                }
+                if (Array[Index] < Min_Element)
+                {
+                    Min_Element = Array[Index];
+                }
+            }
+            Console.WriteLine(Min_Element + "\t" + Max_Element);
+        }
+    }
+}
