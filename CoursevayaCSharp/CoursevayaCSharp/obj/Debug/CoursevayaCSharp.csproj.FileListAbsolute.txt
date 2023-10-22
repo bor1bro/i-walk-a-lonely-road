@@ -1,0 +1,8 @@
+D:\Coding\jopa\allog\CoursevayaCSharp\CoursevayaCSharp\bin\Debug\CoursevayaCSharp.exe.config
+D:\Coding\jopa\allog\CoursevayaCSharp\CoursevayaCSharp\bin\Debug\CoursevayaCSharp.exe
+D:\Coding\jopa\allog\CoursevayaCSharp\CoursevayaCSharp\bin\Debug\CoursevayaCSharp.pdb
+D:\Coding\jopa\allog\CoursevayaCSharp\CoursevayaCSharp\obj\Debug\CoursevayaCSharp.csproj.AssemblyReference.cache
+D:\Coding\jopa\allog\CoursevayaCSharp\CoursevayaCSharp\obj\Debug\CoursevayaCSharp.csproj.SuggestedBindingRedirects.cache
+D:\Coding\jopa\allog\CoursevayaCSharp\CoursevayaCSharp\obj\Debug\CoursevayaCSharp.csproj.CoreCompileInputs.cache
+D:\Coding\jopa\allog\CoursevayaCSharp\CoursevayaCSharp\obj\Debug\CoursevayaCSharp.exe
+D:\Coding\jopa\allog\CoursevayaCSharp\CoursevayaCSharp\obj\Debug\CoursevayaCSharp.pdb
