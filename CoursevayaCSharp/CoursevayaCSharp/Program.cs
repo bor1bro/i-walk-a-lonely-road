@@ -18,7 +18,10 @@ namespace CoursevayaCSharp
     {
         //Function to display title screen
         public static void Title_Screen()
-        {
+        {    
+            Console.SetWindowSize(77, 8);
+            Console.SetBufferSize(78, 8);
+            Console.SetWindowPosition(0, 0);
             string Game_Title = File.ReadAllText(@"MAZEGAME.txt");
             for (int Index = 0; Index < Game_Title.Length; Index++)
             {
@@ -28,7 +31,7 @@ namespace CoursevayaCSharp
             Console.ResetColor();
             Console.BackgroundColor = ConsoleColor.Yellow;
             Console.ForegroundColor = ConsoleColor.DarkYellow;
-            Console.WriteLine("\n           Press any key to access menu (or press Escape to exit)            ");
+            Console.Write("\n           Press any key to access menu (or press Escape to exit)            ");
             Console.ResetColor();
 
             ConsoleKeyInfo Key_Info = Console.ReadKey();
@@ -43,10 +46,17 @@ namespace CoursevayaCSharp
         {
             //Initialize values for maze generation
             List<List<char>> Maze_Ptr = new List<List<char>>();
-            int Height = 12;
-            int Width = 12;
+            int Height = 14; //LVL1
+            int Width = 10;
+            //int Height = 10; //LVL2
+            //int Width = 14;
+            //int Height = 12; //LVL3
+            //int Width = 12;
 
-            //Draw menu
+            //Draw menu       
+            Console.SetWindowSize(35, 13);
+            Console.SetBufferSize(36, 13);
+            Console.SetWindowPosition(0, 0);
             string Game_Menu = File.ReadAllText(@"MAZEGAME_MENU.txt");
             for (int Index = 0; Index < Game_Menu.Length; Index++)
             {
@@ -123,6 +133,9 @@ namespace CoursevayaCSharp
             {
                 Player.Next_Step();
                 Console.SetCursorPosition(0, 0);
+                Console.SetWindowSize(Maze_Ptr[0].Count + 1, Maze_Ptr.Count + 1);
+                Console.SetBufferSize(Maze_Ptr[0].Count + 1, Maze_Ptr.Count + 1);
+                Console.SetWindowPosition(0, 0);
                 Maze_Print(Buf_Maze_Ptr);
             }
             //Stopping the timer and saving elapsed time data
@@ -131,13 +144,13 @@ namespace CoursevayaCSharp
             //Clearing the console to hide maze
             Console.Clear();
 
-            Console.BackgroundColor = ConsoleColor.Yellow;
-            Console.ForegroundColor = ConsoleColor.DarkYellow;
-            Console.WriteLine("\t\t\t\t\t\t\t");
-            Console.WriteLine("\t\tREADY? (Press any key)\t\t\t");
-            Console.WriteLine("\t\t\t\t\t\t\t");
-            Console.ResetColor();
-            Console.Clear();
+            //Console.BackgroundColor = ConsoleColor.Yellow;
+            //Console.ForegroundColor = ConsoleColor.DarkYellow;
+            //Console.WriteLine("\t\t\t\t\t\t\t");
+            //Console.WriteLine("\t\tREADY? (Press any key)\t\t\t");
+            //Console.WriteLine("\t\t\t\t\t\t\t");
+            //Console.ResetColor();
+            //Console.Clear();
             //Player goes next
             //Loading already generated maze
             Buf_Maze_Ptr = Maze_Ptr.Maze_Load();
