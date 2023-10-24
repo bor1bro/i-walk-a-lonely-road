@@ -45,7 +45,7 @@ namespace CoursevayaCSharp
             //Draw player on the screen
             Maze_Ptr_[Current_Position.Y][Current_Position.X] = 'P';
 
-            return Maze_Ptr_;           
+            return Maze_Ptr_;
         }
 
         //Function that does walking in the maze
@@ -64,32 +64,32 @@ namespace CoursevayaCSharp
                             Direction2D.UP;
             //Initialize temporary variable to check forward cell
             Position2D Forward_Cell;
-            do 
+            do
             {
                 //3. Check cell that the player is facing
                 Forward_Cell = Current_Position;
                 switch (Current_Direction)
                 {
                     case Direction2D.RIGHT:
-                    {
-                            Forward_Cell.X++;                           
+                        {
+                            Forward_Cell.X++;
                             break;
-                    }
+                        }
                     case Direction2D.DOWN:
-                    {
+                        {
                             Forward_Cell.Y++;
                             break;
-                    }
+                        }
                     case Direction2D.LEFT:
-                    {
+                        {
                             Forward_Cell.X--;
                             break;
-                    }
+                        }
                     case Direction2D.UP:
-                    {
+                        {
                             Forward_Cell.Y--;
                             break;
-                    }
+                        }
                 }
                 //3.1. If wall:
                 //Player turns 90 degrees, clockwise
@@ -116,9 +116,73 @@ namespace CoursevayaCSharp
             //5.2. If it is the exit - end
             Is_Win_ = Maze_Ptr_[Current_Position.Y][Current_Position.X] == 'X';
             //Marking player position
-            Maze_Ptr_[Current_Position.Y][Current_Position.X] = 'P';
+            Maze_Ptr_[Current_Position.Y][Current_Position.X] = 'B';
             //Marking cells investigated by player
-            Maze_Ptr_[Previous_Position.Y][Previous_Position.X] = 'o';                                             
+            Maze_Ptr_[Previous_Position.Y][Previous_Position.X] = 'a';
+        }
+
+        //Function to control player's movement across the maze
+        public void Player_Controller()
+        {
+            //If at the exit, don't do more steps
+            if (Is_Win_)
+            {
+                return;
+            }
+            //Saving previous position to mark player's trail
+            Position2D Previous_Position = Current_Position;
+            Position2D Forward_Cell;
+            //Wait for input
+            ConsoleKeyInfo Key_Info = Console.ReadKey();
+            switch (Key_Info.Key)
+            {
+                case ConsoleKey.UpArrow:
+                    {
+                        Forward_Cell = Current_Position;
+                        Forward_Cell.Y--;
+                        if (Maze_Ptr_[Forward_Cell.Y][Forward_Cell.X] != '#')
+                        {
+                            Current_Position = Forward_Cell;
+                        }
+                        break;
+                    }
+                case ConsoleKey.DownArrow:
+                    {
+                        Forward_Cell = Current_Position;
+                        Forward_Cell.Y++;
+                        if (Maze_Ptr_[Forward_Cell.Y][Forward_Cell.X] != '#')
+                        {
+                            Current_Position = Forward_Cell;
+                        }
+                        break;
+                    }
+                case ConsoleKey.LeftArrow:
+                    {
+                        Forward_Cell = Current_Position;
+                        Forward_Cell.X--;
+                        if (Maze_Ptr_[Forward_Cell.Y][Forward_Cell.X] != '#')
+                        {
+                            Current_Position = Forward_Cell;
+                        }
+                        break;
+                    }
+                case ConsoleKey.RightArrow:
+                    {
+                        Forward_Cell = Current_Position;
+                        Forward_Cell.X++;
+                        if (Maze_Ptr_[Forward_Cell.Y][Forward_Cell.X] != '#')
+                        {
+                            Current_Position = Forward_Cell;
+                        }
+                        break;
+                    }
+            }
+
+            Is_Win_ = Maze_Ptr_[Current_Position.Y][Current_Position.X] == 'X';
+            //Marking cells investigated by player
+            Maze_Ptr_[Previous_Position.Y][Previous_Position.X] = 'o';
+            //Marking player position
+            Maze_Ptr_[Current_Position.Y][Current_Position.X] = 'P';
         }
 
         //Function to check for victory
@@ -136,6 +200,4 @@ namespace CoursevayaCSharp
         //Ptr on maze where we go
         protected List<List<char>> Maze_Ptr_;
     }
-
-    
 }

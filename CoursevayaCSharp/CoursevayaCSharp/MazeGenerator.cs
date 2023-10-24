@@ -1,10 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
+using System.IO;
 using System.Linq;
+using System.Runtime.Serialization.Formatters.Binary;
+using System.Text;
 
 namespace CoursevayaCSharp
 {
-    public class MazeGenerator
+    public static class MazeGenerator
     {
         //Function to generate maze structure
         public static List<List<char>> Maze_Generate(int Width, int Height)
@@ -30,7 +34,7 @@ namespace CoursevayaCSharp
             Maze_Ptr.Capacity = Output_Height;
             //Loop for initializing empty maze row by row
             for (int I_Index = 0; I_Index < Output_Height; ++I_Index)
-            { 
+            {
                 var Row = new List<char>();
                 Row.Capacity = Output_Width;
                 for (int J_Index = 0; J_Index < Output_Width; ++J_Index)
@@ -46,7 +50,7 @@ namespace CoursevayaCSharp
                         {
                             Row.Add(' ');
                         }
-                        else 
+                        else
                         {
                             Row.Add('#');
                         }
@@ -88,7 +92,7 @@ namespace CoursevayaCSharp
                     {
                         Maze_Ptr[I_Index * 2 + 1][J_Index * 2 + 2] = '#';
                     }
-                    else 
+                    else
                     {
                         //If no wall, merge sets of current cell and cell to the right
                         var Changing_Set = Row_Set[J_Index + 1];
@@ -120,7 +124,7 @@ namespace CoursevayaCSharp
                     if ((Bottom_Wall == 1) && (Current_Set_Count != 1))
                     {
                         Maze_Ptr[I_Index * 2 + 2][J_Index * 2 + 1] = '#';
-                    }                  
+                    }
                 }
                 //V. Decide, whether to add more rows or stop and finish maze
                 //Check that every set have atleast one cell without a wall (unless it's last row)
@@ -162,8 +166,19 @@ namespace CoursevayaCSharp
                     Maze_Ptr[Output_Height - 2][J_Index * 2 + 2] = ' ';
                 }
             }
+            //Place exit
+            Maze_Ptr[Height * 2 - 1][Width * 2 - 1] = 'X';
             //Output ptr on result maze
             return Maze_Ptr;
+        }
+        //Serialization method to make clone of the maze
+        public static List<List<char>> Maze_Load(this List<List<char>> Maze_Ptr)
+        {
+            BinaryFormatter formatter = new BinaryFormatter();
+            MemoryStream stream = new MemoryStream();
+            formatter.Serialize(stream, Maze_Ptr);
+            stream.Position = 0;
+            return (List<List<char>>)formatter.Deserialize(stream);
         }
 
         //Function to draw maze in console
@@ -193,48 +208,60 @@ namespace CoursevayaCSharp
             switch (Symbol)
             {
                 case '#':
-                {
-                    Console.BackgroundColor = ConsoleColor.Gray;
-                    Console.ForegroundColor = ConsoleColor.Gray;
-                    break; 
-                }
+                    {
+                        Console.BackgroundColor = ConsoleColor.Gray;
+                        Console.ForegroundColor = ConsoleColor.Gray;
+                        break;
+                    }
                 case ' ':
-                {
-                    Console.BackgroundColor = ConsoleColor.DarkGray;
-                    break; 
-                }
+                    {
+                        Console.BackgroundColor = ConsoleColor.DarkGray;
+                        break;
+                    }
                 case 'P':
-                {
-                    Console.BackgroundColor = ConsoleColor.DarkBlue;
-                    Console.ForegroundColor = ConsoleColor.DarkBlue;
-                    break; 
-                }
-                case 'X':
-                {
-                    Console.BackgroundColor = ConsoleColor.Green;
-                    Console.ForegroundColor = ConsoleColor.Green;
-                    break; 
-                }
+                    {
+                        Console.BackgroundColor = ConsoleColor.DarkBlue;
+                        Console.ForegroundColor = ConsoleColor.DarkBlue;
+                        break;
+                    }
                 case 'o':
-                {
-                    Console.BackgroundColor = ConsoleColor.Blue;
-                    Console.ForegroundColor = ConsoleColor.Blue;
-                    break; 
-                }
+                    {
+                        Console.BackgroundColor = ConsoleColor.Blue;
+                        Console.ForegroundColor = ConsoleColor.Blue;
+                        break;
+                    }
+                case 'B':
+                    {
+                        Console.BackgroundColor = ConsoleColor.DarkRed;
+                        Console.ForegroundColor = ConsoleColor.DarkRed;
+                        break;
+                    }
+                case 'a':
+                    {
+                        Console.BackgroundColor = ConsoleColor.Red;
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        break;
+                    }
+                case 'X':
+                    {
+                        Console.BackgroundColor = ConsoleColor.Green;
+                        Console.ForegroundColor = ConsoleColor.Green;
+                        break;
+                    }
                 case '|':
-                {
-                    Console.BackgroundColor = ConsoleColor.Yellow;
-                    Console.ForegroundColor = ConsoleColor.Yellow;
-                    break; 
-                }
+                    {
+                        Console.BackgroundColor = ConsoleColor.Yellow;
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                        break;
+                    }
                 case 'Y':
-                {
-                    Console.BackgroundColor = ConsoleColor.DarkYellow;
-                    Console.ForegroundColor = ConsoleColor.DarkYellow;
-                    break; 
-                }
+                    {
+                        Console.BackgroundColor = ConsoleColor.DarkYellow;
+                        Console.ForegroundColor = ConsoleColor.DarkYellow;
+                        break;
+                    }
             }
         }
-        private MazeGenerator() { }
+        //private MazeGenerator() { }
     }
 }
