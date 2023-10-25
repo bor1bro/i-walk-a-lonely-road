@@ -45,7 +45,7 @@ namespace CoursevayaCSharp
         public static void Game_Menu()
         {
             //Initialize values for maze generation
-            List<List<char>> Maze_Ptr = new List<List<char>>();
+            List<List<char>> Maze_Ptr = new();
             int Height = 14; //LVL1
             int Width = 10;
             //int Height = 10; //LVL2
@@ -53,22 +53,9 @@ namespace CoursevayaCSharp
             //int Height = 12; //LVL3
             //int Width = 12;
 
-            //Draw menu       
-            Console.SetWindowSize(35, 13);
-            Console.SetBufferSize(36, 13);
-            Console.SetWindowPosition(0, 0);
-            string Game_Menu = File.ReadAllText(@"MAZEGAME_MENU.txt");
-            for (int Index = 0; Index < Game_Menu.Length; Index++)
-            {
-                Console.BackgroundColor = ConsoleColor.Yellow;
-                Console.ForegroundColor = ConsoleColor.DarkYellow;
-                if (Game_Menu[Index] == 'Y')
-                {
-                    Console.BackgroundColor = ConsoleColor.DarkYellow;
-                }
-                Console.Write(Game_Menu[Index]);
-            }
-            Console.ResetColor();
+            //Draw menu
+            Game_Menu_Screen();
+
             //Wait for input of desired option (1,2,3,4)
             ConsoleKeyInfo Key_Info = Console.ReadKey();
             Console.Clear();
@@ -113,13 +100,13 @@ namespace CoursevayaCSharp
         }
         //Initialy core loop of the game
         public static void Maze_Setup(List<List<char>> Maze_Ptr)
-        {
+        {            
             //Array to save elapsed time data
-            List<long> Elapsed_Time = new List<long>();
+            List<long> Elapsed_Time = new();
 
             //Initialize position of player
-            PathFinder Player = new PathFinder();
-            Position2D Player_Pos = new Position2D(1, 1);
+            PathFinder Player = new();
+            Position2D Player_Pos = new(1, 1);
 
             //Loading already generated maze
             List<List<char>> Buf_Maze_Ptr = Maze_Ptr.Maze_Load();
@@ -128,15 +115,20 @@ namespace CoursevayaCSharp
 
             //Marking the time of maze completion
             var Time = Stopwatch.StartNew();
+            //Displaying first frame of maze
+            Console.SetWindowSize(Buf_Maze_Ptr[0].Count + 2, Buf_Maze_Ptr.Count + 1);
+            Console.SetBufferSize(Buf_Maze_Ptr[0].Count + 3, Buf_Maze_Ptr.Count + 1);
+            Console.SetCursorPosition(1, 0);
+            Maze_Print(Buf_Maze_Ptr);
+            Console.SetCursorPosition(1, 0);
             //Bot_Player goes first
             while (!Player.isWin())
             {
                 Player.Next_Step();
-                Console.SetCursorPosition(0, 0);
-                Console.SetWindowSize(Maze_Ptr[0].Count + 1, Maze_Ptr.Count + 1);
-                Console.SetBufferSize(Maze_Ptr[0].Count + 1, Maze_Ptr.Count + 1);
-                Console.SetWindowPosition(0, 0);
-                Maze_Print(Buf_Maze_Ptr);
+                Maze_Print(Maze_Ptr, Buf_Maze_Ptr);
+                Console.SetCursorPosition(1, 0);
+                //Add delay in bots movement, because it's moving every tick
+                Thread.Sleep(10);
             }
             //Stopping the timer and saving elapsed time data
             Time.Stop();
@@ -144,27 +136,26 @@ namespace CoursevayaCSharp
             //Clearing the console to hide maze
             Console.Clear();
 
-            //Console.BackgroundColor = ConsoleColor.Yellow;
-            //Console.ForegroundColor = ConsoleColor.DarkYellow;
-            //Console.WriteLine("\t\t\t\t\t\t\t");
-            //Console.WriteLine("\t\tREADY? (Press any key)\t\t\t");
-            //Console.WriteLine("\t\t\t\t\t\t\t");
-            //Console.ResetColor();
-            //Console.Clear();
+
             //Player goes next
+            //Ready screen
+            Ready_Screen(Maze_Ptr);
             //Loading already generated maze
             Buf_Maze_Ptr = Maze_Ptr.Maze_Load();
 
             //Return player to the start
             Player.Init_Player(Player_Pos, Buf_Maze_Ptr);
             Maze_Print(Buf_Maze_Ptr);
+            Console.SetCursorPosition(1, 0);
             //Marking the time of maze completion
             Time = Stopwatch.StartNew();
+
+            Maze_Print(Buf_Maze_Ptr);
             while (!Player.isWin())
             {
                 Player.Player_Controller();
-                Console.SetCursorPosition(0, 0);
-                Maze_Print(Buf_Maze_Ptr);
+                Maze_Print(Maze_Ptr, Buf_Maze_Ptr);
+                Console.SetCursorPosition(1, 0);
             }
             //Stopping the timer and saving elapsed time data
             Time.Stop();
@@ -174,8 +165,53 @@ namespace CoursevayaCSharp
             //Display elapsed time for Player and Bot_Player
 
         }
+        public static void Ready_Screen(List<List<char>> Buf_Maze_Ptr)
+        {
+            Console.SetCursorPosition(0, 0);
+            Console.SetWindowSize(34, 7);
+            Console.SetBufferSize(35, 7);
+            Console.SetWindowPosition(0, 0);
+            string Game_Menu = File.ReadAllText(@"READY.txt");
+            for (int Index = 0; Index < Game_Menu.Length; Index++)
+            {
+                Console.BackgroundColor = ConsoleColor.Yellow;
+                Console.ForegroundColor = ConsoleColor.DarkYellow;
+                if (Game_Menu[Index] == 'Y')
+                {
+                    Console.BackgroundColor = ConsoleColor.DarkYellow;
+                }
+                Console.Write(Game_Menu[Index]);
+            }
+            Console.ReadKey();
+            Console.ResetColor();
+            Console.Clear();
+            Console.SetWindowPosition(0, 0);
+            Console.SetWindowSize(Buf_Maze_Ptr[0].Count + 2, Buf_Maze_Ptr.Count + 1);
+            Console.SetBufferSize(Buf_Maze_Ptr[0].Count + 3, Buf_Maze_Ptr.Count + 1);
+        }
+
+        public static void Game_Menu_Screen()
+        {
+            Console.SetCursorPosition(0, 0);
+            Console.SetWindowSize(35, 13);
+            Console.SetBufferSize(36, 13);
+            Console.SetWindowPosition(0, 0);
+            string Game_Menu = File.ReadAllText(@"MAZEGAME_MENU.txt");
+            for (int Index = 0; Index < Game_Menu.Length; Index++)
+            {
+                Console.BackgroundColor = ConsoleColor.Yellow;
+                Console.ForegroundColor = ConsoleColor.DarkYellow;
+                if (Game_Menu[Index] == 'Y')
+                {
+                    Console.BackgroundColor = ConsoleColor.DarkYellow;
+                }
+                Console.Write(Game_Menu[Index]);
+            }
+            Console.ResetColor();
+        }
         static void Main(string[] args)
         {
+            
             Title_Screen();
             Game_Menu();
         }

@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace CoursevayaCSharp
 {
@@ -190,8 +192,9 @@ namespace CoursevayaCSharp
                 return;
             }
             //Scanning maze row by row and outputting to the console
-            for (int I_Index = 0; I_Index < Maze_Ptr.Count(); ++I_Index)
+            for (int I_Index = 0; I_Index < Maze_Ptr.Count(); ++I_Index)   
             {
+                Console.SetCursorPosition(1, I_Index);
                 for (int J_Index = 0; J_Index < Maze_Ptr[0].Count(); ++J_Index)
                 {
                     Symbol_Check(Maze_Ptr[I_Index][J_Index]);
@@ -199,6 +202,29 @@ namespace CoursevayaCSharp
                     Console.ResetColor();
                 }
                 Console.WriteLine();
+            } 
+        }
+
+        public static void Maze_Print(List<List<char>> Maze_Ptr, List<List<char>> Buf_Maze_Ptr)
+        {
+            //Check ptr for null
+            if (Maze_Ptr == null)
+            {
+                return;
+            }
+            //Scanning maze row by row and outputting to the console only differences
+            for (int I_Index = 0; I_Index < Buf_Maze_Ptr.Count(); ++I_Index)
+            {
+                for (int J_Index = 0; J_Index < Buf_Maze_Ptr[0].Count(); ++J_Index)
+                {
+                    if (Buf_Maze_Ptr[I_Index][J_Index] != Maze_Ptr[I_Index][J_Index])
+                    {
+                        Console.SetCursorPosition(J_Index + 1, I_Index);
+                        Symbol_Check(Buf_Maze_Ptr[I_Index][J_Index]);
+                        Console.Write(Buf_Maze_Ptr[I_Index][J_Index]);
+                        Console.SetCursorPosition(J_Index + 1, I_Index);
+                    }
+                } 
             }
         }
 
