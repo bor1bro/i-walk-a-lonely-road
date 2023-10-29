@@ -204,28 +204,31 @@ namespace CoursevayaCSharp
                 Console.WriteLine();
             } 
         }
-
-        public static void Maze_Print(List<List<char>> Maze_Ptr, List<List<char>> Buf_Maze_Ptr)
+        //Function to draw player's trail in console
+        public static List<List<char>> Maze_Print(List<List<char>> Prev_Buf_Maze_Ptr, List<List<char>> Buf_Maze_Ptr)
         {
             //Check ptr for null
-            if (Maze_Ptr == null)
+            if (Buf_Maze_Ptr == null)
             {
-                return;
+                return null;
             }
             //Scanning maze row by row and outputting to the console only differences
             for (int I_Index = 0; I_Index < Buf_Maze_Ptr.Count(); ++I_Index)
             {
                 for (int J_Index = 0; J_Index < Buf_Maze_Ptr[0].Count(); ++J_Index)
                 {
-                    if (Buf_Maze_Ptr[I_Index][J_Index] != Maze_Ptr[I_Index][J_Index])
+                    if (Buf_Maze_Ptr[I_Index][J_Index] != Prev_Buf_Maze_Ptr[I_Index][J_Index])
                     {
                         Console.SetCursorPosition(J_Index + 1, I_Index);
                         Symbol_Check(Buf_Maze_Ptr[I_Index][J_Index]);
                         Console.Write(Buf_Maze_Ptr[I_Index][J_Index]);
-                        Console.SetCursorPosition(J_Index + 1, I_Index);
+                        //Is needed to evade erasing console char's next to one that is currently drawn
+                        Console.SetCursorPosition(J_Index + 1, I_Index); 
                     }
                 } 
             }
+            Prev_Buf_Maze_Ptr = Maze_Load(Buf_Maze_Ptr);
+            return Prev_Buf_Maze_Ptr;
         }
 
         //Function to visualize game

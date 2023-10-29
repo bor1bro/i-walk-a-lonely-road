@@ -7,7 +7,7 @@
   YY			       YY  
   YY3. How to play the game    YY  
   YY		               YY  
-  YY4. Exit		       YY  
+  YY     Press Esc to exit     YY  
   YY---------------------------YY  
   YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY  
   Press 1,2,3,4 to choose options  
