@@ -45,6 +45,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="FileManagement.cs" />
     <Compile Include="MazeGenerator.cs" />
     <Compile Include="PathFinder.cs" />
     <Compile Include="Program.cs" />

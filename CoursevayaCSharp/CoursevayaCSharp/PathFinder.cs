@@ -16,7 +16,7 @@ namespace CoursevayaCSharp
         LEFT,
         UP,
     };
-    //Initializing position struct
+    // Initialize position struct
     struct Position2D
     {
         public int X;
@@ -31,7 +31,12 @@ namespace CoursevayaCSharp
 
     internal class PathFinder
     {
-        //Function to initialize the player
+        /// <summary>
+        /// Function to initialize the player
+        /// </summary>
+        /// <param name="Start_Position"></param>
+        /// <param name="Maze_Ptr"></param>
+        /// <returns>Maze with player at start position</returns>
         public List<List<char>> Init_Player(Position2D Start_Position, List<List<char>> Maze_Ptr)
         {
             //Maze data to check every step
@@ -48,7 +53,9 @@ namespace CoursevayaCSharp
             return Maze_Ptr_;
         }
 
-        //Function that does walking in the maze
+        /// <summary>
+        /// Function that deterrmines bot movement in the maze
+        /// </summary>
         public void Next_Step()
         {
             //If at the exit, don't do more steps
@@ -121,7 +128,9 @@ namespace CoursevayaCSharp
             Maze_Ptr_[Previous_Position.Y][Previous_Position.X] = 'a';
         }
 
-        //Function to control player's movement across the maze
+        /// <summary>
+        /// Function to control player's movement across the maze
+        /// </summary>
         public void Player_Controller()
         {
             //If at the exit, don't do more steps
@@ -185,7 +194,10 @@ namespace CoursevayaCSharp
             Maze_Ptr_[Current_Position.Y][Current_Position.X] = 'P';
         }
 
-        //Function to check for victory
+        /// <summary>
+        /// Function to check for victory
+        /// </summary>
+        /// <returns>Bool value</returns>
         public bool isWin()
         {
             return Is_Win_;

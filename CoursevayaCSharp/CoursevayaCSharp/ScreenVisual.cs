@@ -15,13 +15,15 @@ namespace CoursevayaCSharp
 {
     internal class ScreenVisual
     {
-        //Function to display title screen
+        /// <summary>
+        /// Function to display title screen
+        /// </summary>
         public static void Title_Screen()
         {
             Console.SetWindowSize(77, 8);
             Console.SetBufferSize(78, 8);
             Console.SetWindowPosition(0, 0);
-            string Game_Title = File.ReadAllText(@"MAZEGAME.txt");
+            string Game_Title = File.ReadAllText(@"Screens/MAZEGAME.txt");
             for (int Index = 0; Index < Game_Title.Length; Index++)
             {
                 Symbol_Check(Game_Title[Index]);
@@ -33,9 +35,6 @@ namespace CoursevayaCSharp
             Console.Write("\n           Press any key to access menu (or press Escape to exit)            ");
             Console.ResetColor();
 
-            //SoundPlayer MusicPlayer = new SoundPlayer(@"MENU.wav");
-            //MusicPlayer.Play();
-
             Key_Info = Console.ReadKey();
             if (Key_Info.Key == ConsoleKey.Escape)
             {
@@ -43,40 +42,37 @@ namespace CoursevayaCSharp
             }
             Console.Clear();
         }
-        //Function to display ready screen
+        /// <summary>
+        /// Function to display ready screen
+        /// </summary>
         public static void Ready_Screen(List<List<char>> Buf_Maze_Ptr)
         {
             Console.SetCursorPosition(0, 0);
-            Console.SetWindowSize(36, 9);
-            Console.SetBufferSize(37, 9);
+            Console.SetWindowSize(34, 10);
+            Console.SetBufferSize(35, 10);
             Console.SetWindowPosition(0, 0);
-            string Game_Menu = File.ReadAllText(@"READY.txt");
-            for (int Index = 0; Index < Game_Menu.Length; Index++)
+            string Ready = File.ReadAllText(@"Screens/READY.txt");
+            for (int Index = 0; Index < Ready.Length; Index++)
             {
                 Console.BackgroundColor = ConsoleColor.Yellow;
                 Console.ForegroundColor = ConsoleColor.DarkYellow;
-                if (Game_Menu[Index] == 'Y')
+                if (Ready[Index] == 'Y')
                 {
                     Console.BackgroundColor = ConsoleColor.DarkYellow;
                 }
-                Console.Write(Game_Menu[Index]);
+                Console.Write(Ready[Index]);
             }
-            Console.ReadKey();
-            Console.ResetColor();
-            Console.Clear();
-            Console.SetWindowPosition(0, 0);
-            //Returning console window to maze size 
-            Console.SetWindowSize(Buf_Maze_Ptr[0].Count + 2, Buf_Maze_Ptr.Count + 1);
-            Console.SetBufferSize(Buf_Maze_Ptr[0].Count + 3, Buf_Maze_Ptr.Count + 1);
         }
-        //Function to draw menu
+        /// <summary>
+        /// Function to draw menu
+        /// </summary>
         public static void Game_Menu_Screen()
         {
             Console.SetCursorPosition(0, 0);
             Console.SetWindowSize(35, 13);
             Console.SetBufferSize(36, 13);
             Console.SetWindowPosition(0, 0);
-            string Game_Menu = File.ReadAllText(@"MAZEGAME_MENU.txt");
+            string Game_Menu = File.ReadAllText(@"Screens/MAZEGAME_MENU.txt");
             for (int Index = 0; Index < Game_Menu.Length; Index++)
             {
                 Console.BackgroundColor = ConsoleColor.Yellow;
@@ -89,52 +85,86 @@ namespace CoursevayaCSharp
             }
             Console.ResetColor();
         }
-        //Function to display warning when exiting from menu
+        /// <summary>
+        /// Function to display warning when exiting from menu
+        /// </summary>
         public static void Exit_Warning_Screen()
         {
             Console.SetCursorPosition(0, 0);
             Console.SetWindowSize(42, 10);
             Console.SetBufferSize(43, 10);
             Console.SetWindowPosition(0, 0);
-            string Game_Menu = File.ReadAllText(@"EXIT_WARNING.txt");
-            for (int Index = 0; Index < Game_Menu.Length; Index++)
+            string Warning = File.ReadAllText(@"Screens/EXIT_WARNING.txt");
+            for (int Index = 0; Index < Warning.Length; Index++)
             {
                 Console.BackgroundColor = ConsoleColor.Yellow;
                 Console.ForegroundColor = ConsoleColor.DarkYellow;
-                if (Game_Menu[Index] == 'T')
+                if (Warning[Index] == 'T')
                 {
                     Console.BackgroundColor = ConsoleColor.DarkYellow;
                 }
-                Console.Write(Game_Menu[Index]);
+                Console.Write(Warning[Index]);
             }
             Console.ResetColor();
         }
-        //Function to display information screen
+        /// <summary>
+        /// Function to display information screen
+        /// </summary>
         public static void Game_Info_Screen()
         {
             Console.SetCursorPosition(0, 0);
             Console.SetWindowSize(58, 26);
             Console.SetBufferSize(59, 26);
             Console.SetWindowPosition(0, 0);
-            string Game_Menu = File.ReadAllText(@"INFO.txt");
-            for (int Index = 0; Index < Game_Menu.Length; Index++)
+            string Game_Info = File.ReadAllText(@"Screens/INFO.txt");
+            for (int Index = 0; Index < Game_Info.Length; Index++)
             {
                 Console.BackgroundColor = ConsoleColor.Yellow;
                 Console.ForegroundColor = ConsoleColor.DarkYellow;
-                if (Game_Menu[Index] == 'Y')
+                if (Game_Info[Index] == 'Y')
                 {
                     Console.BackgroundColor = ConsoleColor.DarkYellow;
                 }
-                Console.Write(Game_Menu[Index]);
+                Console.Write(Game_Info[Index]);
             }
             Console.ResetColor();
         }
-        //Function to display time elapsed on maze completion
-        public static void Elapsed_Time_Screen()
+        /// <summary>
+        /// Function to display time elapsed on maze completion
+        /// </summary>
+        public static void Elapsed_Time_Screen(List<long> Elapsed_Time_Array)
+        {
+            Console.SetCursorPosition(0, 0);
+            Console.SetWindowSize(27, 12);
+            Console.SetBufferSize(28, 12);
+            Console.SetWindowPosition(0, 0);
+            string Elapsed_Time = File.ReadAllText(@"Screens/ELAPSED.txt");
+            for (int Index = 0; Index < Elapsed_Time.Length; Index++)
+            {
+                Console.BackgroundColor = ConsoleColor.Yellow;
+                Console.ForegroundColor = ConsoleColor.DarkYellow;
+                if (Elapsed_Time[Index] == '.')
+                {
+                    Console.BackgroundColor = ConsoleColor.DarkYellow;
+                }
+                Console.Write(Elapsed_Time[Index]);
+            }
+            Console.SetCursorPosition(15, 5);
+            Console.ForegroundColor = ConsoleColor.DarkYellow;
+            Console.Write(Elapsed_Time_Array[1]);
+            Console.SetCursorPosition(15, 7);
+            Console.Write(Elapsed_Time_Array[0]);
+
+            Console.ResetColor();
+            Console.Clear();
+        }
+
+        public static void Lose_Screen()
         {
 
         }
-
+        //public SoundPlayer MusicPlayer = new SoundPlayer(@"MENU.wav");
+        //MusicPlayer.PlayLooping();               
         public static ConsoleKeyInfo Key_Info;
     }
 }

@@ -12,7 +12,12 @@ namespace CoursevayaCSharp
 {
     public static class MazeGenerator
     {
-        //Function to generate maze structure
+        /// <summary>
+        /// Function to generate maze structure
+        /// </summary>
+        /// <param name="Width">Width of the maze</param>
+        /// <param name="Height">Height of the maze</param>
+        /// <returns>Generated maze</returns>
         public static List<List<char>> Maze_Generate(int Width, int Height)
         {
             //Restriction for parameters by 0
@@ -169,22 +174,27 @@ namespace CoursevayaCSharp
                 }
             }
             //Place exit
-            Maze_Ptr[Height * 2 - 1][Width * 2 - 1] = 'X';
+            Maze_Ptr[1][Width * 2 - 1] = 'X';
             //Output ptr on result maze
             return Maze_Ptr;
         }
-        //Serialization method to make clone of the maze
-        public static List<List<char>> Maze_Load(this List<List<char>> Maze_Ptr)
+        /// <summary>
+        /// Serialization method to make clone of the maze
+        /// </summary>
+        /// <returns>Deep copy of desired object</returns>
+        public static List<List<char>> Maze_Copy(this List<List<char>> Maze_Ptr)
         {
-            BinaryFormatter formatter = new BinaryFormatter();
-            MemoryStream stream = new MemoryStream();
-            formatter.Serialize(stream, Maze_Ptr);
-            stream.Position = 0;
-            return (List<List<char>>)formatter.Deserialize(stream);
+            BinaryFormatter Formatter = new BinaryFormatter();
+            MemoryStream Stream = new MemoryStream();
+            Formatter.Serialize(Stream, Maze_Ptr);
+            Stream.Position = 0;
+            return (List<List<char>>)Formatter.Deserialize(Stream);
         }
 
-        //Function to draw maze in console
-        public static void Maze_Print(List<List<char>> Maze_Ptr)
+        /// <summary>
+        /// Function to draw maze in console
+        /// </summary>
+        public static void Maze_Print(List<List<char>> Maze_Ptr, int Cursor_Position)
         {
             //Check ptr for null
             if (Maze_Ptr == null)
@@ -194,7 +204,7 @@ namespace CoursevayaCSharp
             //Scanning maze row by row and outputting to the console
             for (int I_Index = 0; I_Index < Maze_Ptr.Count(); ++I_Index)   
             {
-                Console.SetCursorPosition(1, I_Index);
+                Console.SetCursorPosition(Cursor_Position, I_Index);
                 for (int J_Index = 0; J_Index < Maze_Ptr[0].Count(); ++J_Index)
                 {
                     Symbol_Check(Maze_Ptr[I_Index][J_Index]);
@@ -204,7 +214,12 @@ namespace CoursevayaCSharp
                 Console.WriteLine();
             } 
         }
-        //Function to draw player's trail in console
+        /// <summary>
+        /// Function to draw player's trail in console
+        /// </summary>
+        /// <param name="Prev_Buf_Maze_Ptr">Maze before changes</param>
+        /// <param name="Buf_Maze_Ptr">Maze after changes</param>
+        /// <returns>Maze after changes</returns>
         public static List<List<char>> Maze_Print(List<List<char>> Prev_Buf_Maze_Ptr, List<List<char>> Buf_Maze_Ptr)
         {
             //Check ptr for null
@@ -227,11 +242,14 @@ namespace CoursevayaCSharp
                     }
                 } 
             }
-            Prev_Buf_Maze_Ptr = Maze_Load(Buf_Maze_Ptr);
+            Prev_Buf_Maze_Ptr = Maze_Copy(Buf_Maze_Ptr);
             return Prev_Buf_Maze_Ptr;
         }
 
-        //Function to visualize game
+        /// <summary>
+        /// Function to visualize game
+        /// </summary>
+        /// <param name="Symbol">Checks symbol type to apply rendering on it</param>
         public static void Symbol_Check(char Symbol)
         {
             switch (Symbol)
@@ -291,6 +309,5 @@ namespace CoursevayaCSharp
                     }
             }
         }
-        //private MazeGenerator() { }
     }
 }

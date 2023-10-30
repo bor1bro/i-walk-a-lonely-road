@@ -12,14 +12,17 @@ using System.Linq;
 using static CoursevayaCSharp.MazeGenerator;
 using static CoursevayaCSharp.PathFinder;
 using static CoursevayaCSharp.ScreenVisual;
+using static CoursevayaCSharp.FileManagement;
 
 
 namespace CoursevayaCSharp
 {
     internal class Program
     {
-        
-        //Function to play generated maze game mode
+        /// <summary>
+        /// Function to play generated maze game mode
+        /// </summary>
+        /// <param name="Maze_Ptr"></param>
         public static void Play_Generated(List<List<char>> Maze_Ptr)
         {
             int Height = 10; //LVL1
@@ -48,28 +51,32 @@ namespace CoursevayaCSharp
                     if (Victory)
                     {
                         //Output scoreboard + add result to it + (maybe save maze to the file)
+                        Maze_File_Save(Maze_Ptr);
+                        return;
                     }
                 }
             }
-            else
-            {
-                //Display lose screen, let player get back to the menus
-            }
+            //Display lose screen, let player get back to the menus
+            
         }
-
+        /// <summary>
+        /// Function to play prepared maze game mode
+        /// </summary>
         public static void Play_Prepared(List<List<char>> Maze_Ptr)
         {
             //Get maze from file
-
+            Maze_Ptr = Maze_File_Load(Maze_Ptr);
             //Play maze
             Victory = Maze_Setup(Maze_Ptr);
             //If player has beaten the bot, display scoreboard + add result
             if (Victory)
-            { 
-                
+            {
+                Console.WriteLine("YAY");
             }
         }
-        //Function to display menu
+        /// <summary>
+        /// Function to display menu
+        /// </summary>
         public static void Game()
         {
             //Initialize values for maze storage
@@ -149,9 +156,11 @@ namespace CoursevayaCSharp
                 }
             }
         }
-        //Function that starts gameplay
+        /// <summary>
+        /// Function that starts gameplay
+        /// </summary>
         public static bool Maze_Setup(List<List<char>> Maze_Ptr)
-        {            
+        {
             //Array to save elapsed time data
             List<long> Elapsed_Time = new();
 
@@ -160,18 +169,18 @@ namespace CoursevayaCSharp
             Position2D Player_Pos = new(1, 1);
 
             //Loading already generated maze
-            List<List<char>> Buf_Maze_Ptr = Maze_Ptr.Maze_Load();
-            List<List<char>> Prev_Buf_Maze_Ptr = Maze_Ptr.Maze_Load();
+            List<List<char>> Buf_Maze_Ptr = Maze_Ptr.Maze_Copy();
+            List<List<char>> Prev_Buf_Maze_Ptr = Maze_Ptr.Maze_Copy();
 
             Player.Init_Player(Player_Pos, Buf_Maze_Ptr);
 
             //Marking the time of maze completion
             var Time = Stopwatch.StartNew();
-            //Displaying first frame of maze
-            Console.SetWindowSize(Maze_Ptr[0].Count + 2, Maze_Ptr.Count + 1);
-            Console.SetBufferSize(Maze_Ptr[0].Count + 3, Maze_Ptr.Count + 1);
-            Console.SetCursorPosition(1, 0);
-            Maze_Print(Maze_Ptr);
+                //Displaying first frame of maze
+                Console.SetWindowSize(Maze_Ptr[0].Count + 2, Maze_Ptr.Count + 1);
+                Console.SetBufferSize(Maze_Ptr[0].Count + 3, Maze_Ptr.Count + 1);
+                Console.SetCursorPosition(1, 0);
+            Maze_Print(Maze_Ptr, 1);
             Console.SetCursorPosition(1, 0);
             //Bot_Player goes first
             while (!Player.isWin())
@@ -191,35 +200,43 @@ namespace CoursevayaCSharp
             //Player goes next
             //Ready screen
             Ready_Screen(Maze_Ptr);
+                Key_Info = Console.ReadKey();
+                if (Key_Info.Key == ConsoleKey.Escape)
+                {
+                    return false;
+                }
+                Console.ResetColor();
+                Console.Clear();
+                Console.SetWindowPosition(0, 0);
+                //Returning console window to maze size 
+                Console.SetWindowSize(Buf_Maze_Ptr[0].Count + 2, Buf_Maze_Ptr.Count + 1);
+                Console.SetBufferSize(Buf_Maze_Ptr[0].Count + 3, Buf_Maze_Ptr.Count + 1);
             Click_Sound.Play();
             //Loading already generated maze
-            Buf_Maze_Ptr = Maze_Ptr.Maze_Load();
+            Buf_Maze_Ptr = Maze_Ptr.Maze_Copy();
 
             //Return player to the start
             Player.Init_Player(Player_Pos, Buf_Maze_Ptr);
-            Maze_Print(Maze_Ptr);
+            Maze_Print(Maze_Ptr, 1);
             Console.SetCursorPosition(1, 0);
             //Marking the time of maze completion
             Time = Stopwatch.StartNew();
 
-            Maze_Print(Buf_Maze_Ptr);
+            Maze_Print(Maze_Ptr, 1);
             while (!Player.isWin())
             {
                 Player.Player_Controller();
                 Prev_Buf_Maze_Ptr = Maze_Print(Prev_Buf_Maze_Ptr, Buf_Maze_Ptr);
-                Console.SetCursorPosition(1,0);
+                Console.SetCursorPosition(1, 0);
             }
             //Stopping the timer and saving elapsed time data
             Time.Stop();
             Elapsed_Time.Add(Time.ElapsedMilliseconds / 1000);
-            //Clearing the console to hide maze
-            Console.Clear();
-            Console.ResetColor();
+                //Clearing the console to hide maze
+                Console.ResetColor();
+                Console.Clear();
             //Display elapsed time for Player and Bot_Player
-
-            //Console.WriteLine(Elapsed_Time[0] + "     " + Elapsed_Time[1]);
-
-            Elapsed_Time_Screen();
+            Elapsed_Time_Screen(Elapsed_Time);
 
             Console.ReadKey();
             Click_Sound.Play();
@@ -229,7 +246,7 @@ namespace CoursevayaCSharp
 
         public static ConsoleKeyInfo Key_Info;
         public static bool Victory; 
-        public static SoundPlayer Click_Sound = new SoundPlayer(@"CLICK.wav");
+        public static SoundPlayer Click_Sound = new SoundPlayer(@"Sounds/CLICK.wav");
 
         static void Main(string[] args)
         {

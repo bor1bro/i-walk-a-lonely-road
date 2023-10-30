@@ -1,0 +1,10 @@
+﻿                                  
+  YYYYYYYYYYYYYYYYYYYYYYYYYYYYYY  
+  YY--------------------------YY  
+  YY			      YY  
+  YY  Ready? (Press any key   YY  
+  YY  or press Esc to exit)   YY  
+  YY                          YY  
+  YY--------------------------YY  
+  YYYYYYYYYYYYYYYYYYYYYYYYYYYYYY  
+                                  
