@@ -50,22 +50,25 @@ namespace CoursevayaCSharp
                     Victory = Maze_Setup(Maze_Ptr);
                     if (Victory)
                     {
-                        //Output scoreboard + add result to it + (maybe save maze to the file)
+                        //Output scoreboard +add result to it + (maybe save maze to the file)
                         Maze_File_Save(Maze_Ptr);
                         return;
                     }
                 }
             }
-            //Display lose screen, let player get back to the menus
-            
+            //Display lose screen, let player try again or go back to the menu
+            Lose_Screen();
+            Key_Info = Console.ReadKey();
         }
         /// <summary>
         /// Function to play prepared maze game mode
         /// </summary>
-        public static void Play_Prepared(List<List<char>> Maze_Ptr)
+        public static void Play_Prepared(List<List<char>> Maze_Ptr, string File_Name)
         {
+            Console.ResetColor();
+            Console.Clear();
             //Get maze from file
-            Maze_Ptr = Maze_File_Load(Maze_Ptr);
+            Maze_Ptr = Maze_File_Load(Maze_Ptr, File_Name);
             //Play maze
             Victory = Maze_Setup(Maze_Ptr);
             //If player has beaten the bot, display scoreboard + add result
@@ -73,6 +76,149 @@ namespace CoursevayaCSharp
             {
                 Console.WriteLine("YAY");
             }
+        }
+        /// <summary>
+        /// Function that enables player to choose from saved mazes and play them
+        /// </summary>
+        public static void Choose_Maze(List<List<char>> Maze_Ptr)
+        {
+            bool Exit = false;
+            int File_Quad = 0;
+            string[] File_Names = Load_Maze_File_Names();
+            string[] File_Quad_Names = Get_Maze_Quad(File_Quad, File_Names);
+
+            while (!Exit)
+            {
+                //Display prepared maze screen with quad of file names
+                Maze_Choose_Screen(File_Quad_Names);
+
+                //Wait for input
+                Key_Info = Console.ReadKey();
+                switch (Key_Info.Key)
+                {
+                    //if -> show next quad (if remaining files don't make a quad, display only the remainings)
+                    case ConsoleKey.RightArrow:
+                        {
+                            File_Quad = File_Quad + 4;
+                            //Check if quad goes beyond name array's range, if does fit it in this range  
+                            if (File_Quad > File_Names.Length)
+                            {
+                                File_Quad = File_Quad - 4;
+                            }
+                            File_Quad_Names = Get_Maze_Quad(File_Quad, File_Names);
+                            break;
+                        }
+                    //if <- show prev quad (if it's going negative, show first quad)
+                    case ConsoleKey.LeftArrow:
+                        {
+                            File_Quad = File_Quad - 4;
+                            //Check if quad goes beyond name array's range, if does fit it in this range  
+                            if (File_Quad < 0)
+                            {
+                                File_Quad = File_Quad + 4;
+                            }
+                            File_Quad_Names = Get_Maze_Quad(File_Quad, File_Names);
+                            break;
+                        }
+                    //If player inputs "1" - "4", show warning
+                    //                                  //if proceed - start game,
+                    //                                  //if not - let player choose different maze
+                    //                                  //TODO: Add screen to validate player's decision
+                    case ConsoleKey.D1:
+                        {
+                            //Wait for input
+                            Key_Info = Console.ReadKey();
+                            if (Key_Info.Key == ConsoleKey.Enter)
+                            {                                
+                                Play_Prepared(Maze_Ptr, File_Quad_Names[0]);
+                            }
+                            if (Key_Info.Key == ConsoleKey.Escape)
+                            {
+                                break;
+                            }
+                            break;
+                        }
+                    case ConsoleKey.D2:
+                        {
+                            //Check if this quad member has any name value, if not - go back
+                            if (File_Quad_Names[1] == null)
+                            {
+                                break;
+                            }
+                            //Wait for input
+                            Key_Info = Console.ReadKey();
+                            if (Key_Info.Key == ConsoleKey.Enter)
+                            {
+                                Play_Prepared(Maze_Ptr, File_Quad_Names[1]);
+                            }
+                            if (Key_Info.Key == ConsoleKey.Escape)
+                            {
+                                break;
+                            }
+                            break;
+                        }
+                    case ConsoleKey.D3:
+                        {
+                            //Check if this quad member has any name value, if not - go back
+                            if (File_Quad_Names[2] == null)
+                            {
+                                break;
+                            }
+                            //Wait for input
+                            Key_Info = Console.ReadKey();
+                            if (Key_Info.Key == ConsoleKey.Enter)
+                            {
+                                Play_Prepared(Maze_Ptr, File_Quad_Names[2]);
+                            }
+                            if (Key_Info.Key == ConsoleKey.Escape)
+                            {
+                                break;
+                            }
+                            break;
+                        }
+                    case ConsoleKey.D4:
+                        {
+                            //Check if this quad member has any name value, if not - go back
+                            if (File_Quad_Names[3] == null)
+                            {
+                                break;
+                            }
+                            //Wait for input:              
+                            Key_Info = Console.ReadKey();
+                            if (Key_Info.Key == ConsoleKey.Enter)
+                            {
+                                Play_Prepared(Maze_Ptr, File_Quad_Names[3]);
+                            }
+                            if (Key_Info.Key == ConsoleKey.Escape)
+                            {
+                                break;
+                            }
+                            break;
+                        }
+                    //If player pressed Esc - go back to main menu
+                    case ConsoleKey.Escape:
+                        {
+                            Exit = true;
+                            break;
+                        }
+                }
+            }
+        }
+        /// <summary>
+        /// Function to iterate through names of maze files
+        /// </summary>
+        /// <returns>Quad of names</returns>
+        public static string[] Get_Maze_Quad(int Quad, string[] Names)
+        {
+            int Counter = 0;
+            string[] Quad_Names = new string[4];
+            do
+            {
+                Quad_Names[Counter] = Names[Quad];
+                Quad++;
+                Counter++;
+            } while (Counter != 4 && Quad < Names.Length);
+            return Quad_Names;
         }
         /// <summary>
         /// Function to display menu
@@ -108,11 +254,18 @@ namespace CoursevayaCSharp
                     //Play on prepared maze
                     case ConsoleKey.D2:
                         {
-                            Play_Prepared(Maze_Ptr);
+                            Choose_Maze(Maze_Ptr);
+                            //Play_Prepared(Maze_Ptr);
+                            break;
+                        }
+                    //Show scoreboard
+                    case ConsoleKey.D3:
+                        {
+                            //Maybe add traversing through scoreboard like in maze choosing screen
                             break;
                         }
                     //Display game info
-                    case ConsoleKey.D3:
+                    case ConsoleKey.D4:
                         {
                             while (true)
                             {
@@ -241,16 +394,32 @@ namespace CoursevayaCSharp
             Console.ReadKey();
             Click_Sound.Play();
 
+            Console.ResetColor();
+            Console.Clear();
+
+            if (Elapsed_Time[0] == Elapsed_Time[1])
+            {
+                //Maybe add tie screen
+                return false;
+            }
+
             return (Elapsed_Time[0] > Elapsed_Time[1]);
         }
+        
 
         public static ConsoleKeyInfo Key_Info;
         public static bool Victory; 
-        public static SoundPlayer Click_Sound = new SoundPlayer(@"Sounds/CLICK.wav");
+        public static SoundPlayer Click_Sound = new(@"Sounds/CLICK.wav");
 
         static void Main(string[] args)
         {
             Game();
+            //int c = 0;
+            //while (c != 14)
+            //{
+            //    Maze_File_Save(Maze_Generate(21, 16));
+            //    c++;
+            //}
         }
     }
 }

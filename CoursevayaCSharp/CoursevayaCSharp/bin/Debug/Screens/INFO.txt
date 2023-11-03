@@ -5,8 +5,8 @@
   YY  1. Generated maze game mode:		      YY  
   YY    There are 3 LVLs of difficulty:		      YY  
   YY		-LVL 1, maze size is 10x15	      YY  
-  YY		-LVL 2, maze size is 15x20	      YY  
-  YY		-LVL 3, maze size is 20x25	      YY  
+  YY		-LVL 2, maze size is 13x18	      YY  
+  YY		-LVL 3, maze size is 16x21	      YY  
   YY    Game starts at LVL 1. Goal of this game mode  YY  
   YY    is to find exit of the maze faster than  the  YY  
   YY    bot does, if player succeeds, he goes on the  YY  

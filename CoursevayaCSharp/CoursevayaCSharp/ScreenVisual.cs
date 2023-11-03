@@ -69,8 +69,8 @@ namespace CoursevayaCSharp
         public static void Game_Menu_Screen()
         {
             Console.SetCursorPosition(0, 0);
-            Console.SetWindowSize(35, 13);
-            Console.SetBufferSize(36, 13);
+            Console.SetWindowSize(35, 15);
+            Console.SetBufferSize(36, 15);
             Console.SetWindowPosition(0, 0);
             string Game_Menu = File.ReadAllText(@"Screens/MAZEGAME_MENU.txt");
             for (int Index = 0; Index < Game_Menu.Length; Index++)
@@ -135,8 +135,8 @@ namespace CoursevayaCSharp
         public static void Elapsed_Time_Screen(List<long> Elapsed_Time_Array)
         {
             Console.SetCursorPosition(0, 0);
-            Console.SetWindowSize(27, 12);
-            Console.SetBufferSize(28, 12);
+            Console.SetWindowSize(28, 12);
+            Console.SetBufferSize(29, 12);
             Console.SetWindowPosition(0, 0);
             string Elapsed_Time = File.ReadAllText(@"Screens/ELAPSED.txt");
             for (int Index = 0; Index < Elapsed_Time.Length; Index++)
@@ -154,15 +154,63 @@ namespace CoursevayaCSharp
             Console.Write(Elapsed_Time_Array[1]);
             Console.SetCursorPosition(15, 7);
             Console.Write(Elapsed_Time_Array[0]);
-
-            Console.ResetColor();
-            Console.Clear();
         }
 
         public static void Lose_Screen()
         {
+            Console.SetCursorPosition(0, 0);
+            Console.SetWindowSize(28, 17);
+            Console.SetBufferSize(29, 17);
+            Console.SetWindowPosition(0, 0);
+            string Game_Info = File.ReadAllText(@"Screens/LOSE.txt");
+            for (int Index = 0; Index < Game_Info.Length; Index++)
+            {
+                Console.BackgroundColor = ConsoleColor.Yellow;
+                Console.ForegroundColor = ConsoleColor.DarkYellow;
+                if (Game_Info[Index] == '.')
+                {
+                    Console.BackgroundColor = ConsoleColor.DarkYellow;
+                }
+                Console.Write(Game_Info[Index]);
+            }
+            Console.ResetColor();
+        }
+        
+        public static void Tie_Screen()
+        {
 
         }
+        /// <summary>
+        /// Function to display choose menu
+        /// </summary>
+        public static void Maze_Choose_Screen(string[] Names)
+        {
+            Console.SetCursorPosition(0, 0);
+            Console.SetWindowSize(24, 17);
+            Console.SetBufferSize(25, 17);
+            Console.SetWindowPosition(0, 0);
+            string Game_Info = File.ReadAllText(@"Screens/CHOOSE.txt");
+            for (int Index = 0; Index < Game_Info.Length; Index++)
+            {
+                Console.BackgroundColor = ConsoleColor.Yellow;
+                Console.ForegroundColor = ConsoleColor.DarkYellow;
+                if (Game_Info[Index] == ',')
+                {
+                    Console.BackgroundColor = ConsoleColor.DarkYellow;
+                }
+                Console.Write(Game_Info[Index]);
+            }
+            Console.SetCursorPosition(7, 5);
+            Console.Write(Names[0]);
+            Console.SetCursorPosition(7, 7);
+            Console.Write(Names[1]);
+            Console.SetCursorPosition(7, 9);
+            Console.Write(Names[2]);
+            Console.SetCursorPosition(7, 11);
+            Console.Write(Names[3]);
+            Console.ResetColor();
+        }
+
         //public SoundPlayer MusicPlayer = new SoundPlayer(@"MENU.wav");
         //MusicPlayer.PlayLooping();               
         public static ConsoleKeyInfo Key_Info;

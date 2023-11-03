@@ -5,7 +5,9 @@
   YY			       YY  
   YY2. Play on prepared maze   YY  
   YY			       YY  
-  YY3. How to play the game    YY  
+  YY3. Show scoreboard         YY  
+  YY                           YY  
+  YY4. How to play the game    YY  
   YY		               YY  
   YY     Press Esc to exit     YY  
   YY---------------------------YY  
