@@ -12,7 +12,8 @@ using System.Linq;
 using static CoursevayaCSharp.MazeGenerator;
 using static CoursevayaCSharp.PathFinder;
 using static CoursevayaCSharp.ScreenVisual;
-using static CoursevayaCSharp.FileManagement;
+using static CoursevayaCSharp.MazeFileManagement;
+using static CoursevayaCSharp.Scoreboard;
 
 
 namespace CoursevayaCSharp
@@ -35,22 +36,24 @@ namespace CoursevayaCSharp
             //Generate LVL 1 maze 
             Maze_Ptr = Maze_Generate(Width, Height);
             //Play maze
-            Victory = Maze_Setup(Maze_Ptr);
+            Victory = Maze_Play(Maze_Ptr);
             if (Victory)
             {
                 //Generate LVL 2 maze
                 Maze_Ptr = Maze_Generate(Width + 3, Height + 3);
                 //Play maze
-                Victory = Maze_Setup(Maze_Ptr);
+                Victory = Maze_Play(Maze_Ptr);
                 if (Victory)
                 {
                     //Generate LVL 3 maze
                     Maze_Ptr = Maze_Generate(Width + 6, Height + 6);
                     //Play maze
-                    Victory = Maze_Setup(Maze_Ptr);
+                    Victory = Maze_Play(Maze_Ptr);
                     if (Victory)
                     {
-                        //Output scoreboard +add result to it + (maybe save maze to the file)
+                        //TODO: let player enter his name -> save it to structure
+                        //      -> save all data of player to file (name[7], time, maze)
+                        //      -> output scoreboard with all victorious attempts
                         Maze_File_Save(Maze_Ptr);
                         return;
                     }
@@ -70,11 +73,13 @@ namespace CoursevayaCSharp
             //Get maze from file
             Maze_Ptr = Maze_File_Load(Maze_Ptr, File_Name);
             //Play maze
-            Victory = Maze_Setup(Maze_Ptr);
+            Victory = Maze_Play(Maze_Ptr);
             //If player has beaten the bot, display scoreboard + add result
             if (Victory)
             {
-                Console.WriteLine("YAY");
+                //TODO: let player enter his name -> save it to structure
+                //      -> save all data of player to file (name[7], time, maze)
+                //      -> output scoreboard with all victorious attempts
             }
         }
         /// <summary>
@@ -128,6 +133,7 @@ namespace CoursevayaCSharp
                         {
                             //Wait for input
                             Key_Info = Console.ReadKey();
+                            Click_Sound.Play();
                             if (Key_Info.Key == ConsoleKey.Enter)
                             {                                
                                 Play_Prepared(Maze_Ptr, File_Quad_Names[0]);
@@ -147,6 +153,7 @@ namespace CoursevayaCSharp
                             }
                             //Wait for input
                             Key_Info = Console.ReadKey();
+                            Click_Sound.Play();
                             if (Key_Info.Key == ConsoleKey.Enter)
                             {
                                 Play_Prepared(Maze_Ptr, File_Quad_Names[1]);
@@ -166,6 +173,7 @@ namespace CoursevayaCSharp
                             }
                             //Wait for input
                             Key_Info = Console.ReadKey();
+                            Click_Sound.Play();
                             if (Key_Info.Key == ConsoleKey.Enter)
                             {
                                 Play_Prepared(Maze_Ptr, File_Quad_Names[2]);
@@ -185,6 +193,7 @@ namespace CoursevayaCSharp
                             }
                             //Wait for input:              
                             Key_Info = Console.ReadKey();
+                            Click_Sound.Play();
                             if (Key_Info.Key == ConsoleKey.Enter)
                             {
                                 Play_Prepared(Maze_Ptr, File_Quad_Names[3]);
@@ -198,6 +207,7 @@ namespace CoursevayaCSharp
                     //If player pressed Esc - go back to main menu
                     case ConsoleKey.Escape:
                         {
+                            Click_Sound.Play();
                             Exit = true;
                             break;
                         }
@@ -255,13 +265,30 @@ namespace CoursevayaCSharp
                     case ConsoleKey.D2:
                         {
                             Choose_Maze(Maze_Ptr);
-                            //Play_Prepared(Maze_Ptr);
                             break;
                         }
                     //Show scoreboard
                     case ConsoleKey.D3:
                         {
-                            //Maybe add traversing through scoreboard like in maze choosing screen
+                            //Display scoreboard
+                            Scoreboard_Screen(Scoreboard_Load());
+                            //Wait for player's input
+                            //TODO: Add sorting:
+                            //              -by player name
+                            //              -by time
+                            //              -by maze
+                            //              -no sorting (if chosen - reverts to in-file data)
+                            //      If player presses S open sorting options screen
+                            //          4 options (+ Esc if don't want to choose)
+                            //      When the option is chosen - go back to sorted scoreboard
+                            //      Every sorting will combine with previous
+                            Key_Info = Console.ReadKey();
+                            //Let player leave this screen
+                            if (Key_Info.Key == ConsoleKey.Escape)
+                            {
+                                Click_Sound.Play();
+                                break;
+                            }
                             break;
                         }
                     //Display game info
@@ -298,7 +325,7 @@ namespace CoursevayaCSharp
                                     break;
                                 }
                                 //If N go to menu
-                                if (Key_Info.Key == ConsoleKey.N)
+                                if (Key_Info.Key == ConsoleKey.N || Key_Info.Key == ConsoleKey.Escape)
                                 {
                                     Click_Sound.Play();
                                     break;
@@ -312,7 +339,7 @@ namespace CoursevayaCSharp
         /// <summary>
         /// Function that starts gameplay
         /// </summary>
-        public static bool Maze_Setup(List<List<char>> Maze_Ptr)
+        public static bool Maze_Play(List<List<char>> Maze_Ptr)
         {
             //Array to save elapsed time data
             List<long> Elapsed_Time = new();
@@ -405,8 +432,8 @@ namespace CoursevayaCSharp
 
             return (Elapsed_Time[0] > Elapsed_Time[1]);
         }
-        
 
+        public static PlayerInfo Player_Info;
         public static ConsoleKeyInfo Key_Info;
         public static bool Victory; 
         public static SoundPlayer Click_Sound = new(@"Sounds/CLICK.wav");

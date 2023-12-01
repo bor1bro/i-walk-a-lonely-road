@@ -200,6 +200,8 @@ namespace CoursevayaCSharp
                 }
                 Console.Write(Game_Info[Index]);
             }
+            //TODO: Make this universal for lists of any size
+            //      -> put it into separate function 
             Console.SetCursorPosition(7, 5);
             Console.Write(Names[0]);
             Console.SetCursorPosition(7, 7);
@@ -208,6 +210,26 @@ namespace CoursevayaCSharp
             Console.Write(Names[2]);
             Console.SetCursorPosition(7, 11);
             Console.Write(Names[3]);
+            Console.ResetColor();
+        }
+
+        public static void Scoreboard_Screen(string[] Sorted_Scoreboard_Info)
+        {
+            Console.SetCursorPosition(0, 0);
+            Console.SetWindowSize(40, 29);
+            Console.SetBufferSize(41, 29);
+            Console.SetWindowPosition(0, 0);
+            string Game_Info = File.ReadAllText(@"Screens/SCOREBOARD.txt");
+            for (int Index = 0; Index < Game_Info.Length; Index++)
+            {
+                Console.BackgroundColor = ConsoleColor.Yellow;
+                Console.ForegroundColor = ConsoleColor.DarkYellow;
+                if (Game_Info[Index] == '.')
+                {
+                    Console.BackgroundColor = ConsoleColor.DarkYellow;
+                }
+                Console.Write(Game_Info[Index]);
+            }
             Console.ResetColor();
         }
 

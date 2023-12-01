@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace CoursevayaCSharp
 {
-    internal class FileManagement
+    internal class MazeFileManagement
     {
         /// <summary>
         /// Function to load maze from file
