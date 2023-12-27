@@ -54,7 +54,7 @@ namespace CoursevayaCSharp
         }
 
         /// <summary>
-        /// Function that deterrmines bot movement in the maze
+        /// Function that determines bot movement in the maze
         /// </summary>
         public void Next_Step()
         {

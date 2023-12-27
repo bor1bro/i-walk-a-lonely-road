@@ -14,8 +14,10 @@ namespace CoursevayaCSharp
         /// <summary>
         /// Function to load maze from file
         /// </summary>
-        public static List<List<char>> Maze_File_Load(List<List<char>> Maze_Ptr, string File_Name)
+        public static List<List<char>> Maze_File_Load(string File_Name)
         {
+            List<List<char>> Maze_Ptr = new();
+
             string Input = File.ReadAllText(@"Saved-Mazes/" + File_Name + ".txt");
             
             Maze_Ptr.Capacity = 33;
@@ -23,23 +25,26 @@ namespace CoursevayaCSharp
 
             for (int I_Index = 0; I_Index < Maze_Ptr.Capacity; ++I_Index)
             {
-                List<char> Row = new()
-                {
-                    Capacity = 43
-                };
-                for (int J_Index = 0; J_Index < Row.Capacity; ++J_Index)
-                {
-                    Row.Add(Input[K_Index]);
-                    K_Index++;
-                }
-                Maze_Ptr.Add(Row);
+                //if (K_Index < 1419)
+                //{
+                    List<char> Row = new()
+                    {
+                        Capacity = 43
+                    };
+                    for (int J_Index = 0; J_Index < Row.Capacity; ++J_Index)
+                    {
+                        Row.Add(Input[K_Index]);
+                        K_Index++;
+                    }
+                    Maze_Ptr.Add(Row);
+                //}
             }
             return Maze_Ptr;
         }
         /// <summary>
         /// Function to save maze on which player was victorious
         /// </summary>
-        public static void Maze_File_Save(List<List<char>> Maze_Ptr)
+        public static string Maze_File_Save(List<List<char>> Maze_Ptr, bool Option)
         {
             //Generating random file name
             var PathName = Random_File_Name(8);
@@ -55,10 +60,14 @@ namespace CoursevayaCSharp
                 }
             }
 
-            using FileStream FileStream = File.OpenWrite(@"Saved-Mazes/" + PathName + ".txt");
-            Byte[] Info = new UTF8Encoding(true).GetBytes(Maze_Ptr_String);
-            //Writing maze into the file
-            FileStream.Write(Info, 0, Info.Length);
+            if (Option)
+            {
+                using FileStream FileStream = File.OpenWrite(@"Saved-Mazes/" + PathName + ".txt");
+                Byte[] Info = new UTF8Encoding(true).GetBytes(Maze_Ptr_String);
+                //Writing maze into the file
+                FileStream.Write(Info, 0, Info.Length);
+            }
+            return PathName;
         }
         /// <summary>
         /// Function to generate random file numbers (to save mazes)

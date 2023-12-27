@@ -25,5 +25,5 @@
   ..|          |        |          |..  
   ..--------------------------------..  
   ....................................  
-    Press S to choose sorting option    
-      or press Esc to exit to menu      
+                                        
+        press Esc to exit to menu       

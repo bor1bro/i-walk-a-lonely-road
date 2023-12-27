@@ -26,6 +26,12 @@ namespace CoursevayaCSharp
         /// <param name="Maze_Ptr"></param>
         public static void Play_Generated(List<List<char>> Maze_Ptr)
         {
+            PlayerInfo PlayerWin = new PlayerInfo {
+                Name = new string(new char[7]),
+                Maze_Name = new string(new char[8]),
+                Time = 0,
+            };
+             
             int Height = 10; //LVL1
             int Width = 15;
             //int Height = 13; //LVL2
@@ -54,24 +60,42 @@ namespace CoursevayaCSharp
                         //TODO: let player enter his name -> save it to structure
                         //      -> save all data of player to file (name[7], time, maze)
                         //      -> output scoreboard with all victorious attempts
-                        Maze_File_Save(Maze_Ptr);
+                        Console.Clear();
+                        Player_Input_Screen();
+                        Console.SetCursorPosition(9, 6);
+                        PlayerWin.Name = Scoreboard_Player_Input(PlayerWin.Name);
+                        PlayerWin.Maze_Name = Maze_File_Save(Maze_Ptr, true);
+                        Scoreboard_Save(PlayerWin);
+                        Leaf_Through_Scoreboard();
+
                         return;
                     }
                 }
             }
-            //Display lose screen, let player try again or go back to the menu
-            Lose_Screen();
-            Key_Info = Console.ReadKey();
+            if (!Victory)
+            {
+                //Display lose screen, let player try again or go back to the menu
+                Console.Clear();
+                Lose_Screen();
+                Key_Info = Console.ReadKey();
+            }
         }
         /// <summary>
         /// Function to play prepared maze game mode
         /// </summary>
         public static void Play_Prepared(List<List<char>> Maze_Ptr, string File_Name)
         {
+            PlayerInfo PlayerWin = new PlayerInfo
+            {
+                Name = new string(new char[7]),
+                Maze_Name = new string(new char[8]),
+                Time = 0,
+            };
+
             Console.ResetColor();
             Console.Clear();
             //Get maze from file
-            Maze_Ptr = Maze_File_Load(Maze_Ptr, File_Name);
+            Maze_Ptr = Maze_File_Load(File_Name);
             //Play maze
             Victory = Maze_Play(Maze_Ptr);
             //If player has beaten the bot, display scoreboard + add result
@@ -80,13 +104,32 @@ namespace CoursevayaCSharp
                 //TODO: let player enter his name -> save it to structure
                 //      -> save all data of player to file (name[7], time, maze)
                 //      -> output scoreboard with all victorious attempts
+                Console.Clear();
+                Player_Input_Screen();
+                Console.SetCursorPosition(9, 6);
+                PlayerWin.Name = Scoreboard_Player_Input(PlayerWin.Name);
+                PlayerWin.Maze_Name = Maze_File_Save(Maze_Ptr, false);
+                PlayerWin.Time = WinTime;
+                Scoreboard_Save(PlayerWin);
+                Leaf_Through_Scoreboard();
+
+                return;
+            }
+            else {
+                //Display lose screen, let player try again or go back to the menu
+                Console.Clear();
+                Lose_Screen();
+                Key_Info = Console.ReadKey();
+                return;
             }
         }
         /// <summary>
         /// Function that enables player to choose from saved mazes and play them
         /// </summary>
-        public static void Choose_Maze(List<List<char>> Maze_Ptr)
+        public static void Choose_Maze()
         {
+            List<List<char>> Maze_Ptr = new();
+
             bool Exit = false;
             int File_Quad = 0;
             string[] File_Names = Load_Maze_File_Names();
@@ -99,6 +142,7 @@ namespace CoursevayaCSharp
 
                 //Wait for input
                 Key_Info = Console.ReadKey();
+                Click_Sound.Play();
                 switch (Key_Info.Key)
                 {
                     //if -> show next quad (if remaining files don't make a quad, display only the remainings)
@@ -131,6 +175,7 @@ namespace CoursevayaCSharp
                     //                                  //TODO: Add screen to validate player's decision
                     case ConsoleKey.D1:
                         {
+                            Maze_Choose_Warning_Screen();
                             //Wait for input
                             Key_Info = Console.ReadKey();
                             Click_Sound.Play();
@@ -151,6 +196,7 @@ namespace CoursevayaCSharp
                             {
                                 break;
                             }
+                            Maze_Choose_Warning_Screen();
                             //Wait for input
                             Key_Info = Console.ReadKey();
                             Click_Sound.Play();
@@ -171,6 +217,7 @@ namespace CoursevayaCSharp
                             {
                                 break;
                             }
+                            Maze_Choose_Warning_Screen();
                             //Wait for input
                             Key_Info = Console.ReadKey();
                             Click_Sound.Play();
@@ -191,6 +238,7 @@ namespace CoursevayaCSharp
                             {
                                 break;
                             }
+                            Maze_Choose_Warning_Screen();
                             //Wait for input:              
                             Key_Info = Console.ReadKey();
                             Click_Sound.Play();
@@ -224,6 +272,10 @@ namespace CoursevayaCSharp
             string[] Quad_Names = new string[4];
             do
             {
+                if (Quad == Names.Length)
+                {
+                    return Quad_Names;
+                }
                 Quad_Names[Counter] = Names[Quad];
                 Quad++;
                 Counter++;
@@ -239,11 +291,7 @@ namespace CoursevayaCSharp
             List<List<char>> Maze_Ptr = new();
             //Boolean variable for game loop condition
             bool Exit = false;
-
-            //Display title screen
-            Title_Screen();
-            Click_Sound.Play();
-
+            
             //In fact this is the core loop of the game
             while (!Exit)
             {
@@ -264,31 +312,14 @@ namespace CoursevayaCSharp
                     //Play on prepared maze
                     case ConsoleKey.D2:
                         {
-                            Choose_Maze(Maze_Ptr);
+                            Choose_Maze();
                             break;
                         }
                     //Show scoreboard
                     case ConsoleKey.D3:
                         {
                             //Display scoreboard
-                            Scoreboard_Screen(Scoreboard_Load());
-                            //Wait for player's input
-                            //TODO: Add sorting:
-                            //              -by player name
-                            //              -by time
-                            //              -by maze
-                            //              -no sorting (if chosen - reverts to in-file data)
-                            //      If player presses S open sorting options screen
-                            //          4 options (+ Esc if don't want to choose)
-                            //      When the option is chosen - go back to sorted scoreboard
-                            //      Every sorting will combine with previous
-                            Key_Info = Console.ReadKey();
-                            //Let player leave this screen
-                            if (Key_Info.Key == ConsoleKey.Escape)
-                            {
-                                Click_Sound.Play();
-                                break;
-                            }
+                            Leaf_Through_Scoreboard();
                             break;
                         }
                     //Display game info
@@ -354,6 +385,18 @@ namespace CoursevayaCSharp
 
             Player.Init_Player(Player_Pos, Buf_Maze_Ptr);
 
+            //Ready screen
+            Ready_Screen(Maze_Ptr);
+            Key_Info = Console.ReadKey();
+            
+            Console.ResetColor();
+            Console.Clear();
+            Console.SetWindowPosition(0, 0);
+            //Returning console window to maze size 
+            Console.SetWindowSize(Buf_Maze_Ptr[0].Count + 2, Buf_Maze_Ptr.Count + 1);
+            Console.SetBufferSize(Buf_Maze_Ptr[0].Count + 3, Buf_Maze_Ptr.Count + 1);
+            Click_Sound.Play();
+
             //Marking the time of maze completion
             var Time = Stopwatch.StartNew();
                 //Displaying first frame of maze
@@ -362,14 +405,12 @@ namespace CoursevayaCSharp
                 Console.SetCursorPosition(1, 0);
             Maze_Print(Maze_Ptr, 1);
             Console.SetCursorPosition(1, 0);
-            //Bot_Player goes first
+            //Player goes first
             while (!Player.isWin())
             {
-                Player.Next_Step();
+                Player.Player_Controller();
                 Prev_Buf_Maze_Ptr = Maze_Print(Prev_Buf_Maze_Ptr, Buf_Maze_Ptr);
                 Console.SetCursorPosition(1, 0);
-                //Add delay in bots movement, because it's moving every tick
-                Thread.Sleep(75);
             }
             //Stopping the timer and saving elapsed time data
             Time.Stop();
@@ -377,21 +418,8 @@ namespace CoursevayaCSharp
             //Clearing the console to hide maze
             Console.Clear();
 
-            //Player goes next
-            //Ready screen
-            Ready_Screen(Maze_Ptr);
-                Key_Info = Console.ReadKey();
-                if (Key_Info.Key == ConsoleKey.Escape)
-                {
-                    return false;
-                }
-                Console.ResetColor();
-                Console.Clear();
-                Console.SetWindowPosition(0, 0);
-                //Returning console window to maze size 
-                Console.SetWindowSize(Buf_Maze_Ptr[0].Count + 2, Buf_Maze_Ptr.Count + 1);
-                Console.SetBufferSize(Buf_Maze_Ptr[0].Count + 3, Buf_Maze_Ptr.Count + 1);
-            Click_Sound.Play();
+            //Bot goes next
+            
             //Loading already generated maze
             Buf_Maze_Ptr = Maze_Ptr.Maze_Copy();
 
@@ -405,9 +433,11 @@ namespace CoursevayaCSharp
             Maze_Print(Maze_Ptr, 1);
             while (!Player.isWin())
             {
-                Player.Player_Controller();
+                Player.Next_Step();
                 Prev_Buf_Maze_Ptr = Maze_Print(Prev_Buf_Maze_Ptr, Buf_Maze_Ptr);
                 Console.SetCursorPosition(1, 0);
+                //Add delay in bots movement, because it's moving every tick
+                Thread.Sleep(75);
             }
             //Stopping the timer and saving elapsed time data
             Time.Stop();
@@ -430,9 +460,12 @@ namespace CoursevayaCSharp
                 return false;
             }
 
-            return (Elapsed_Time[0] > Elapsed_Time[1]);
+            WinTime = Elapsed_Time[0];
+
+            return (Elapsed_Time[0] < Elapsed_Time[1]);
         }
 
+        public static long WinTime;
         public static PlayerInfo Player_Info;
         public static ConsoleKeyInfo Key_Info;
         public static bool Victory; 
@@ -440,11 +473,15 @@ namespace CoursevayaCSharp
 
         static void Main(string[] args)
         {
+            //Display title screen
+            Title_Screen();
+            Click_Sound.Play();
+
             Game();
             //int c = 0;
             //while (c != 14)
             //{
-            //    Maze_File_Save(Maze_Generate(21, 16));
+            //    Maze_File_Save(Maze_Generate(21, 16), true);
             //    c++;
             //}
         }
