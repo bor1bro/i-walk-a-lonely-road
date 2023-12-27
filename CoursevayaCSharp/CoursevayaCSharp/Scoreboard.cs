@@ -59,7 +59,7 @@ namespace CoursevayaCSharp
         public static string Scoreboard_Player_Input(string Player_Name)
         {
             string Buf_Name = Console.ReadLine();
-            Player_Name = Buf_Name.Substring(0, 8);
+            Player_Name = Buf_Name.Substring(0, 7);
             return Player_Name;
         }
 
